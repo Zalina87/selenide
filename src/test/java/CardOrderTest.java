@@ -1,17 +1,32 @@
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
 public class CardOrderTest {
+
+    @BeforeAll
+    static void setupAll() {
+        // Создаём уникальный каталог для профиля Chrome
+        ChromeOptions options = new ChromeOptions();
+        String uniqueDir = System.getProperty("java.io.tmpdir") + "/chrome-profile-" + UUID.randomUUID();
+        options.addArguments("--user-data-dir=" + uniqueDir);
+        // Применяем настройки в Selenide
+        Configuration.browserCapabilities = options;
+    }
+
     @BeforeEach
     void setup() {
         Selenide.open("http://localhost:9999/");
