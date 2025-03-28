@@ -19,11 +19,11 @@ public class CardOrderTest {
 
     @BeforeAll
     static void setupAll() {
-        // Создаём уникальный каталог для профиля Chrome
+        
         ChromeOptions options = new ChromeOptions();
-        String uniqueDir = System.getProperty("java.io.tmpdir") + "/chrome-profile-" + UUID.randomUUID();
-        options.addArguments("--user-data-dir=" + uniqueDir);
-        // Применяем настройки в Selenide
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--headless");
         Configuration.browserCapabilities = options;
     }
 
