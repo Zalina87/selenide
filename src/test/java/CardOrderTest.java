@@ -18,15 +18,6 @@ import static com.codeborne.selenide.Selenide.$$;
 
 public class CardOrderTest {
 
-    @BeforeAll
-    static void setupAll() {
-
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--no-sandbox");
-        options.addArguments("--headless");
-        Configuration.browserCapabilities = options;
-    }
 
     @BeforeEach
     void setup() {
@@ -52,15 +43,17 @@ public class CardOrderTest {
     void shouldSubmitFormUsingAutoCompleteAndCalendar() {
         $("[data-test-id=city] input").setValue("Ка");
         $$(".menu-item").find(Condition.text("Казань")).click();
-        LocalDate targetDate = LocalDate.now().plusDays(7);
+        LocalDate targetDate = LocalDate.now().plusDays(31);
         String targetDateString = targetDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
         String targetDay = String.valueOf(targetDate.getDayOfMonth());
         String targetMonthYear = targetDate.format(DateTimeFormatter.ofPattern("LLLL yyyy", new Locale("ru")));
         $("[data-test-id=date] .calendar-input__custom-control").click();
         $(".calendar").shouldBe(Condition.visible);
-        while(!$(".calendar__name").getText().equalsIgnoreCase(targetMonthYear)) {
+        int clickCounter = targetDate.getMonthValue() - LocalDate.now().getMonthValue();
+        for (int i = 0; i < clickCounter; i++) {
             $("[data-step='1'].calendar__arrow_direction_right").click();
         }
+
         $$("td.calendar__day").find(Condition.text(targetDay)).click();
         $("[data-test-id=name] input").setValue("Иванов Иван");
         $("[data-test-id=phone] input").setValue("+79636045632");
